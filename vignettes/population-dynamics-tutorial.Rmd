@@ -1,0 +1,145 @@
+---
+title: "Population Dynamics Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Population Dynamics Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial introduces `simulate_population_dynamics()`. Population dynamics are important in artificial life because individual reproduction and death can produce population-level patterns over time.
+
+In this tutorial, you will run a population simulation, plot population size, compare resource levels, and interpret output carefully.
+
+## Basic simulation
+
+```{r pop-basic}
+pop <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 80,
+  carrying_capacity = 120,
+  resource_level = 1.0,
+  seed = 8
+)
+
+head(pop$summary)
+```
+
+## Plot population over time
+
+```{r pop-plot}
+plot_alife_sim(
+  pop$summary,
+  x = "step",
+  y = "population",
+  type = "line"
+)
+```
+
+## Plot mean energy
+
+```{r pop-energy-plot}
+plot_alife_sim(
+  pop$summary,
+  x = "step",
+  y = "mean_energy",
+  type = "line"
+)
+```
+
+## Compare resource levels
+
+```{r pop-resource-compare}
+low_resource <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 80,
+  carrying_capacity = 120,
+  resource_level = 0.5,
+  seed = 8
+)
+
+high_resource <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 80,
+  carrying_capacity = 120,
+  resource_level = 1.5,
+  seed = 8
+)
+
+data.frame(
+  scenario = c("low resource", "high resource"),
+  final_population = c(tail(low_resource$summary$population, 1), tail(high_resource$summary$population, 1)),
+  final_mean_energy = c(tail(low_resource$summary$mean_energy, 1), tail(high_resource$summary$mean_energy, 1))
+)
+```
+
+## Measure trait change
+
+```{r pop-measure}
+measure_life_like_complexity(
+  pop$agents,
+  trait_col = "efficiency",
+  time_col = "step"
+)
+```
+
+## Compare carrying capacity
+
+```{r pop-capacity-compare}
+small_capacity <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 80,
+  carrying_capacity = 60,
+  resource_level = 1.0,
+  seed = 8
+)
+
+large_capacity <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 80,
+  carrying_capacity = 160,
+  resource_level = 1.0,
+  seed = 8
+)
+
+data.frame(
+  scenario = c("small capacity", "large capacity"),
+  final_population = c(tail(small_capacity$summary$population, 1), tail(large_capacity$summary$population, 1)),
+  max_population = c(max(small_capacity$summary$population), max(large_capacity$summary$population))
+)
+```
+
+## Interpretation
+
+Population dynamics emerge from repeated individual-level processes: energy gain, energy cost, death, reproduction, inheritance, mutation, and selection.
+
+The population curve is not imposed directly. It arises from the simulation rules.
+
+## Suggested exercises
+
+- Change `initial_population`.
+- Change `carrying_capacity`.
+- Increase or decrease `resource_level`.
+- Change `mutation_rate`.
+- Ask whether the population stabilizes, grows, or declines.
+
+## Responsible interpretation
+
+This is a simplified educational model. It does not replace ecological, evolutionary, or demographic modeling. It illustrates how population-level patterns can arise from individual-level rules.
+

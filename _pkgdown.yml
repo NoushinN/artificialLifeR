@@ -1,0 +1,108 @@
+url: https://noushinn.github.io/artificialLifeR/
+
+template:
+  bootstrap: 5
+
+extra_css: pkgdown/extra.css
+
+navbar:
+  structure:
+    left:  [intro, reference, core_tutorials, theory_guide]
+    right: [github]
+
+  components:
+    core_tutorials:
+      text: "Core Tutorials"
+      menu:
+      - text: "Getting Started"
+        href: articles/getting-started.html
+      - text: "Agents and Traits"
+        href: articles/agents-and-traits-tutorial.html
+      - text: "Resource Competition"
+        href: articles/resource-competition-tutorial.html
+      - text: "Reproduction and Mutation"
+        href: articles/reproduction-mutation-tutorial.html
+      - text: "Selection"
+        href: articles/selection-tutorial.html
+      - text: "Population Dynamics"
+        href: articles/population-dynamics-tutorial.html
+      - text: "Measuring Life-like Complexity"
+        href: articles/measuring-lifelike-complexity-tutorial.html
+      - text: "Comparing Artificial-Life Models"
+        href: articles/comparing-alife-models-tutorial.html
+
+    theory_guide:
+      text: "Theory Guide"
+      menu:
+      - text: "What Is Artificial Life?"
+        href: articles/what-is-artificial-life.html
+      - text: "Agents, Environments, and Local Rules"
+        href: articles/agents-environments-local-rules.html
+      - text: "Resources, Metabolism, and Constraint"
+        href: articles/resources-metabolism-constraint.html
+      - text: "Reproduction and Inheritance"
+        href: articles/reproduction-inheritance.html
+      - text: "Mutation, Variation, and Novelty"
+        href: articles/mutation-variation-novelty.html
+      - text: "Selection and Adaptation"
+        href: articles/selection-adaptation.html
+      - text: "Population Dynamics and Evolvability"
+        href: articles/population-dynamics-evolvability.html
+      - text: "Artificial Life, Emergence, and Origin of Life"
+        href: articles/alife-emergence-origin-life.html
+      - text: "Artificial Life and Consciousness Debates"
+        href: articles/alife-consciousness-debates.html
+      - text: "Limitations and Responsible Use"
+        href: articles/limitations-responsible-use.html
+
+    github:
+      icon: fab fa-github
+      href: https://github.com/NoushinN/artificialLifeR
+      aria-label: GitHub
+
+home:
+  title: artificialLifeR
+  description: Educational simulations for artificial life, agents, resources, reproduction, mutation, selection, and life-like complexity.
+
+articles:
+- title: Core Tutorials
+  contents:
+  - getting-started
+  - agents-and-traits-tutorial
+  - resource-competition-tutorial
+  - reproduction-mutation-tutorial
+  - selection-tutorial
+  - population-dynamics-tutorial
+  - measuring-lifelike-complexity-tutorial
+  - comparing-alife-models-tutorial
+
+- title: Theory Guide
+  contents:
+  - what-is-artificial-life
+  - agents-environments-local-rules
+  - resources-metabolism-constraint
+  - reproduction-inheritance
+  - mutation-variation-novelty
+  - selection-adaptation
+  - population-dynamics-evolvability
+  - alife-emergence-origin-life
+  - alife-consciousness-debates
+  - limitations-responsible-use
+
+reference:
+- title: Agents and environments
+  contents:
+  - create_agents
+  - simulate_resource_competition
+- title: Reproduction, mutation, and selection
+  contents:
+  - simulate_reproduction
+  - simulate_mutation
+  - simulate_selection
+- title: Population dynamics
+  contents:
+  - simulate_population_dynamics
+- title: Measurement and visualization
+  contents:
+  - measure_life_like_complexity
+  - plot_alife_sim

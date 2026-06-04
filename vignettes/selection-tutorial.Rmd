@@ -1,0 +1,113 @@
+---
+title: "Selection Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Selection Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial introduces `simulate_selection()`. Selection is a process in which some agents persist or reproduce more than others because of differences in traits or fitness.
+
+In this package, selection is simplified. It helps learners explore how population composition can change when survival depends on energy, efficiency, or a fitness proxy.
+
+## Create agents
+
+```{r selection-agents}
+agents <- create_agents(
+  n_agents = 80,
+  seed = 6
+)
+
+summary(agents$efficiency)
+```
+
+## Apply selection
+
+```{r selection-basic}
+selected <- simulate_selection(
+  agents,
+  survival_fraction = 0.40,
+  stochastic = FALSE,
+  seed = 6
+)
+
+nrow(agents)
+nrow(selected)
+head(selected)
+```
+
+## Compare before and after selection
+
+```{r selection-compare}
+rbind(
+  before = measure_life_like_complexity(agents, trait_col = "efficiency"),
+  after = measure_life_like_complexity(selected, trait_col = "efficiency")
+)
+```
+
+## Plot energy before and after
+
+```{r selection-energy-table}
+comparison <- data.frame(
+  group = c(rep("before", nrow(agents)), rep("after", nrow(selected))),
+  energy = c(agents$energy, selected$energy),
+  index = seq_len(nrow(agents) + nrow(selected))
+)
+
+head(comparison)
+```
+
+## Stochastic selection
+
+Selection is not always deterministic. In stochastic selection, higher-fitness agents have a better chance of being selected, but chance still matters.
+
+```{r stochastic-selection}
+stochastic_selected <- simulate_selection(
+  agents,
+  survival_fraction = 0.40,
+  stochastic = TRUE,
+  seed = 7
+)
+
+rbind(
+  deterministic = measure_life_like_complexity(selected, trait_col = "fitness"),
+  stochastic = measure_life_like_complexity(stochastic_selected, trait_col = "fitness")
+)
+```
+
+## Interpretation
+
+Selection changes the composition of the population. In deterministic selection, the highest-fitness agents are kept. In stochastic selection, fitter agents are more likely to persist, but lower-fitness agents may sometimes remain.
+
+This illustrates a key artificial-life idea:
+
+> Population-level change can arise when individual differences affect survival or reproduction.
+
+## Suggested exercises
+
+- Change `survival_fraction` and compare results.
+- Use deterministic and stochastic selection.
+- Create a custom fitness column and select using `fitness_col`.
+- Ask which traits become more common after selection.
+
+## Responsible interpretation
+
+This function illustrates selection in a simplified artificial system. It does not model full natural selection, genetics, development, or ecology.
+

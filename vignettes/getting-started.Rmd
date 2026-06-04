@@ -1,0 +1,138 @@
+---
+title: "Getting Started with artificialLifeR"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Getting Started with artificialLifeR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Overview
+
+`artificialLifeR` is an educational R package for exploring artificial-life ideas through simplified simulations. The package focuses on agents, resources, reproduction, mutation, selection, population dynamics, and life-like complexity.
+
+The central idea is:
+
+> Life-like patterns can arise from local interaction, variation, inheritance, and environmental constraint.
+
+The simulations are toy models. They are designed for teaching and conceptual exploration, not for realistic biological prediction.
+
+## What the package helps you explore
+
+| Model family | Main question | Core function |
+|---|---|---|
+| Agents and traits | What are the artificial individuals? | `create_agents()` |
+| Resource competition | How do agents interact with an environment? | `simulate_resource_competition()` |
+| Reproduction | How can offspring inherit traits? | `simulate_reproduction()` |
+| Mutation | How does variation enter a population? | `simulate_mutation()` |
+| Selection | How do some agents persist more than others? | `simulate_selection()` |
+| Population dynamics | How does population size change over time? | `simulate_population_dynamics()` |
+| Measurement | How can outputs be summarized? | `measure_life_like_complexity()` |
+
+## First example: create agents
+
+```{r first-agents}
+agents <- create_agents(
+  n_agents = 50,
+  seed = 1
+)
+
+head(agents)
+```
+
+## Interpretation
+
+Each row represents one artificial agent. The agents have positions, energy, and simple traits such as speed and efficiency.
+
+These agents are not organisms. They are simplified units for exploring artificial-life ideas.
+
+## Resource competition
+
+```{r first-competition}
+competition <- simulate_resource_competition(
+  n_agents = 50,
+  steps = 40,
+  resource_regen = 0.20,
+  seed = 2
+)
+
+head(competition$summary)
+```
+
+## Plot average energy
+
+```{r first-energy-plot}
+plot_alife_sim(
+  competition$summary,
+  x = "step",
+  y = "mean_energy",
+  type = "line"
+)
+```
+
+## Measure life-like complexity
+
+```{r first-measure}
+measure_life_like_complexity(
+  competition$agents,
+  trait_col = "energy",
+  time_col = "step"
+)
+```
+
+## Population dynamics
+
+```{r first-population}
+pop <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 60,
+  carrying_capacity = 100,
+  seed = 3
+)
+
+head(pop$summary)
+```
+
+```{r first-pop-plot}
+plot_alife_sim(
+  pop$summary,
+  x = "step",
+  y = "population",
+  type = "line"
+)
+```
+
+## Suggested learning path
+
+1. Start with `create_agents()` to understand traits and populations.
+2. Use `simulate_resource_competition()` to explore agents in an environment.
+3. Use `simulate_reproduction()` and `simulate_mutation()` to explore inheritance and variation.
+4. Use `simulate_selection()` to explore fitness-based survival.
+5. Use `simulate_population_dynamics()` to study population-level change.
+6. Use `measure_life_like_complexity()` and `plot_alife_sim()` to summarize and visualize outputs.
+7. Read the Theory Guide to connect the code to artificial life, emergence, origin-of-life research, and responsible interpretation.
+
+## Responsible interpretation
+
+It is better to say:
+
+> The model illustrates life-like dynamics in a simplified artificial system.
+
+than:
+
+> The model creates or fully explains life.
+

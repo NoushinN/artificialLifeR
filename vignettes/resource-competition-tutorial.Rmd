@@ -1,0 +1,134 @@
+---
+title: "Resource Competition Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Resource Competition Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial introduces `simulate_resource_competition()`. Resource competition is a core artificial-life idea because agents must interact with an environment to maintain energy.
+
+In this tutorial, you will run a competition simulation, inspect agent and resource outputs, plot average energy, compare resource regeneration settings, and interpret results carefully.
+
+## Basic simulation
+
+```{r resource-basic}
+competition <- simulate_resource_competition(
+  n_agents = 50,
+  steps = 50,
+  n_resources = 30,
+  resource_regen = 0.20,
+  seed = 2
+)
+
+names(competition)
+```
+
+## Inspect outputs
+
+```{r inspect-resource-output}
+head(competition$agents)
+head(competition$resources)
+head(competition$summary)
+```
+
+The result is a list with:
+
+| Object | Meaning |
+|---|---|
+| `agents` | Agent states over time |
+| `resources` | Resource locations and amounts over time |
+| `summary` | Population-level summary by time step |
+
+## Plot average energy
+
+```{r resource-energy-plot}
+plot_alife_sim(
+  competition$summary,
+  x = "step",
+  y = "mean_energy",
+  type = "line"
+)
+```
+
+## Plot number alive
+
+```{r resource-alive-plot}
+plot_alife_sim(
+  competition$summary,
+  x = "step",
+  y = "n_alive",
+  type = "line"
+)
+```
+
+## Compare resource regeneration
+
+```{r resource-regen-compare}
+low_regen <- simulate_resource_competition(
+  n_agents = 50,
+  steps = 50,
+  resource_regen = 0.05,
+  seed = 2
+)
+
+high_regen <- simulate_resource_competition(
+  n_agents = 50,
+  steps = 50,
+  resource_regen = 0.40,
+  seed = 2
+)
+
+rbind(
+  low_regen = measure_life_like_complexity(low_regen$agents, trait_col = "energy", time_col = "step"),
+  high_regen = measure_life_like_complexity(high_regen$agents, trait_col = "energy", time_col = "step")
+)
+```
+
+## Compare population summaries
+
+```{r resource-summary-compare}
+data.frame(
+  scenario = c("low regeneration", "high regeneration"),
+  final_alive = c(tail(low_regen$summary$n_alive, 1), tail(high_regen$summary$n_alive, 1)),
+  final_mean_energy = c(tail(low_regen$summary$mean_energy, 1), tail(high_regen$summary$mean_energy, 1)),
+  final_total_resource = c(tail(low_regen$summary$total_resource, 1), tail(high_regen$summary$total_resource, 1))
+)
+```
+
+## Interpretation
+
+Resource regeneration changes environmental constraint. If resources regenerate slowly, agents may lose energy or die. If resources regenerate quickly, more agents may maintain energy.
+
+This illustrates an artificial-life principle:
+
+> Agent behavior cannot be understood separately from the environment.
+
+## Suggested exercises
+
+- Increase `movement_cost` and observe survival.
+- Increase `n_agents` while keeping resources fixed.
+- Change `consumption_rate` and compare average energy.
+- Ask whether the environment is resource-rich or resource-limited.
+
+## Responsible interpretation
+
+This model illustrates resource competition in a simplified world. It is not a full ecological model, but it helps users explore energy, constraint, and agent-environment interaction.
+

@@ -1,0 +1,136 @@
+---
+title: "Reproduction and Mutation Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Reproduction and Mutation Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial introduces `simulate_reproduction()` and `simulate_mutation()`. Reproduction and mutation are central to artificial life because they allow traits to persist and vary across generations.
+
+The goal is to show how offspring inherit traits and how mutation introduces variation.
+
+## Create agents
+
+```{r repro-create}
+agents <- create_agents(
+  n_agents = 30,
+  energy_mean = 1.8,
+  seed = 4
+)
+
+head(agents)
+```
+
+## Simulate reproduction
+
+```{r repro-basic}
+offspring_pop <- simulate_reproduction(
+  agents,
+  mutation_rate = 0.10,
+  mutation_sd = 0.03,
+  seed = 4
+)
+
+nrow(agents)
+nrow(offspring_pop)
+head(offspring_pop)
+```
+
+## Interpretation
+
+Agents with enough energy can produce offspring. Offspring inherit traits from parents, with optional mutation. This is a simplified representation of inheritance, not a full biological reproduction model.
+
+## Apply mutation to one trait
+
+```{r mutation-basic}
+mutated <- simulate_mutation(
+  agents,
+  trait = "efficiency",
+  mutation_rate = 0.50,
+  mutation_sd = 0.08,
+  lower = 0.01,
+  upper = 1,
+  seed = 5
+)
+
+head(mutated)
+```
+
+## Compare trait summaries
+
+```{r mutation-summary}
+rbind(
+  original = measure_life_like_complexity(agents, trait_col = "efficiency"),
+  mutated = measure_life_like_complexity(mutated, trait_col = "efficiency")
+)
+```
+
+## Compare low and high mutation rates
+
+```{r mutation-rate-compare}
+low_mutation <- simulate_mutation(
+  agents,
+  trait = "efficiency",
+  mutation_rate = 0.05,
+  mutation_sd = 0.08,
+  lower = 0.01,
+  upper = 1,
+  seed = 5
+)
+
+high_mutation <- simulate_mutation(
+  agents,
+  trait = "efficiency",
+  mutation_rate = 0.80,
+  mutation_sd = 0.08,
+  lower = 0.01,
+  upper = 1,
+  seed = 5
+)
+
+rbind(
+  low_mutation = measure_life_like_complexity(low_mutation, trait_col = "efficiency"),
+  high_mutation = measure_life_like_complexity(high_mutation, trait_col = "efficiency")
+)
+```
+
+## Interpretation of mutation
+
+Mutation introduces trait variation. Without variation, selection has little material to act on. With too much mutation, inherited structure may become unstable.
+
+A careful interpretation is:
+
+> Mutation changes trait distributions in the artificial population.
+
+not:
+
+> Mutation alone creates biological evolution.
+
+## Suggested exercises
+
+- Change `mutation_sd` and observe trait variability.
+- Mutate `speed` instead of `efficiency`.
+- Increase initial energy and observe reproduction.
+- Ask how inheritance and variation work together.
+
+## Key takeaway
+
+`simulate_reproduction()` and `simulate_mutation()` provide simplified tools for exploring inheritance and variation. Together, they help illustrate how artificial populations can change across generations.

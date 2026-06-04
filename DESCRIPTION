@@ -1,0 +1,17 @@
+Package: artificialLifeR
+Type: Package
+Title: Educational Simulations for Artificial Life
+Version: 0.1.0
+Authors@R: person(given = "Noushin", family = "Nabavi", role = c("aut", "cre"), email = "12345678+NoushinN@users.noreply.github.com")
+Description: Educational simulations and visualizations for artificial life concepts, including agents, resources, reproduction, mutation, selection, population dynamics, and life-like organization. The package is designed for teaching, conceptual exploration, and science communication rather than empirical biological modeling.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends: R (>= 4.1.0)
+Imports: ggplot2, rlang, stats, utils
+Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://github.com/NoushinN/artificialLifeR, https://noushinn.github.io/artificialLifeR/
+BugReports: https://github.com/NoushinN/artificialLifeR/issues
+Config/roxygen2/version: 8.0.0

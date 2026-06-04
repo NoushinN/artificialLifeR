@@ -1,0 +1,131 @@
+---
+title: "Comparing Artificial-Life Models Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Comparing Artificial-Life Models Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial compares several artificial-life models included in `artificialLifeR`. The goal is to understand how agents, resources, reproduction, mutation, selection, and population dynamics each contribute to life-like behavior.
+
+## Run several models
+
+```{r compare-run}
+agents <- create_agents(n_agents = 50, seed = 1)
+competition <- simulate_resource_competition(n_agents = 50, steps = 40, seed = 2)
+population <- simulate_population_dynamics(initial_population = 40, steps = 60, seed = 3)
+selected <- simulate_selection(agents, survival_fraction = 0.50, seed = 4)
+```
+
+## Inspect outputs
+
+```{r compare-heads}
+head(agents)
+head(competition$summary)
+head(population$summary)
+head(selected)
+```
+
+## Compare model roles
+
+| Model | Unit | Main process | Output pattern |
+|---|---|---|---|
+| Agents | Individual agent | Trait initialization | Population variation |
+| Resource competition | Agent and environment | Energy gain and cost | Survival and energy change |
+| Selection | Agent population | Fitness-based persistence | Changed population composition |
+| Population dynamics | Population through time | Birth, death, mutation, capacity | Population growth or decline |
+
+## Compare summaries
+
+```{r compare-metrics}
+rbind(
+  initial_efficiency = measure_life_like_complexity(agents, trait_col = "efficiency"),
+  selected_efficiency = measure_life_like_complexity(selected, trait_col = "efficiency"),
+  competition_energy = measure_life_like_complexity(competition$agents, trait_col = "energy", time_col = "step"),
+  population_efficiency = measure_life_like_complexity(population$agents, trait_col = "efficiency", time_col = "step")
+)
+```
+
+## Compare population scenarios
+
+```{r compare-pop-scenarios}
+low_mutation <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 60,
+  mutation_rate = 0.01,
+  seed = 5
+)
+
+high_mutation <- simulate_population_dynamics(
+  initial_population = 40,
+  steps = 60,
+  mutation_rate = 0.30,
+  seed = 5
+)
+
+data.frame(
+  scenario = c("low mutation", "high mutation"),
+  final_population = c(tail(low_mutation$summary$population, 1), tail(high_mutation$summary$population, 1)),
+  final_trait_sd = c(tail(low_mutation$summary$trait_sd, 1), tail(high_mutation$summary$trait_sd, 1))
+)
+```
+
+## Visualize population comparison
+
+```{r compare-pop-plot}
+plot_alife_sim(
+  population$summary,
+  x = "step",
+  y = "population",
+  type = "line"
+)
+```
+
+## Interpretation
+
+The models represent different parts of artificial life. Agent creation gives variation. Resource competition gives environmental constraint. Reproduction gives inheritance. Mutation gives novelty. Selection changes population composition. Population dynamics show how individual-level rules accumulate over time.
+
+A strong interpretation compares mechanisms, not only numbers.
+
+## Choosing the right model
+
+| Question | Useful function |
+|---|---|
+| What variation exists in the initial population? | `create_agents()` |
+| How do resources affect survival? | `simulate_resource_competition()` |
+| How do offspring inherit traits? | `simulate_reproduction()` |
+| How does variation enter a population? | `simulate_mutation()` |
+| How does fitness affect persistence? | `simulate_selection()` |
+| How does population size change over time? | `simulate_population_dynamics()` |
+
+## Responsible interpretation
+
+It is better to say:
+
+> These models illustrate different mechanisms of artificial life.
+
+than:
+
+> These models fully explain biological life.
+
+## Key takeaway
+
+`artificialLifeR` is strongest when its models are understood together. Life-like organization depends on several interacting ideas: agents, environments, variation, inheritance, selection, and population-level change.
+

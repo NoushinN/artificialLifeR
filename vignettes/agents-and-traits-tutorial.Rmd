@@ -1,0 +1,125 @@
+---
+title: "Agents and Traits Tutorial"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Agents and Traits Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This tutorial introduces `create_agents()`. Artificial-life simulations often begin with a population of agents. Agents are simplified individuals with states, traits, and sometimes locations.
+
+In this tutorial, you will learn how to create agents, inspect their traits, visualize their positions, and summarize trait variation.
+
+## Create a population
+
+```{r create-basic}
+agents <- create_agents(
+  n_agents = 60,
+  seed = 10
+)
+
+head(agents)
+```
+
+## Inspect the output
+
+```{r inspect-agents}
+str(agents)
+```
+
+The main columns include:
+
+| Column | Meaning |
+|---|---|
+| `agent` | Agent identifier |
+| `x`, `y` | Position in the world |
+| `energy` | Available energy |
+| `speed` | Movement capacity |
+| `efficiency` | Ability to convert resources into energy |
+| `reproduction_threshold` | Energy needed for reproduction |
+| `age` | Agent age |
+| `alive` | Survival status |
+
+## Plot agent positions
+
+```{r agent-position-plot}
+plot_alife_sim(
+  agents,
+  x = "x",
+  y = "y",
+  type = "point"
+)
+```
+
+## Summarize traits
+
+```{r summarize-traits}
+summary(agents[, c("energy", "speed", "efficiency", "reproduction_threshold")])
+```
+
+## Measure trait diversity
+
+```{r measure-efficiency}
+measure_life_like_complexity(
+  agents,
+  trait_col = "efficiency"
+)
+```
+
+## Compare populations
+
+Create two populations with different trait variability.
+
+```{r compare-trait-sd}
+low_variation <- create_agents(
+  n_agents = 60,
+  trait_sd = 0.03,
+  seed = 10
+)
+
+high_variation <- create_agents(
+  n_agents = 60,
+  trait_sd = 0.20,
+  seed = 10
+)
+
+rbind(
+  low_variation = measure_life_like_complexity(low_variation, trait_col = "efficiency"),
+  high_variation = measure_life_like_complexity(high_variation, trait_col = "efficiency")
+)
+```
+
+## Interpretation
+
+Higher trait variability gives the population more initial diversity. In artificial-life models, variation matters because selection and adaptation require differences among individuals.
+
+However, variation alone is not evolution. Evolution-like dynamics also require inheritance, differential persistence, and change across generations.
+
+## Suggested exercises
+
+- Increase `n_agents` and inspect how the output changes.
+- Change `energy_mean` and observe the distribution of energy.
+- Change `trait_sd` and compare efficiency summaries.
+- Ask which traits might matter under resource competition.
+
+## Key takeaway
+
+`create_agents()` provides the starting population for artificial-life simulations. The agents are simplified units, but they make it possible to explore trait variation, energy, and individual-level differences.
+

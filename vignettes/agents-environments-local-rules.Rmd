@@ -1,0 +1,385 @@
+---
+title: "Agents, Environments, and Local Rules"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Agents, Environments, and Local Rules}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This article explains why agents, environments, and local rules are central to artificial life. Artificial-life systems often begin with simple agents that interact with one another and with an environment [@bedau2003artificial; @langton1989artificial; @mitchell2009complexity].
+
+The purpose of this chapter is to show how artificial-life models use simple components and rules to explore life-like dynamics such as survival, competition, reproduction, adaptation, and population change.
+
+The guiding question is:
+
+> How can simple agents following local rules produce system-level dynamics?
+
+## Why agents matter in artificial life
+
+Artificial life often begins by asking how life-like organization can arise from simpler interacting parts. Instead of starting with a fully formed organism, an artificial-life model usually starts with simplified units called **agents**.
+
+An agent is a simplified unit of action. Depending on the model, agents may represent:
+
+- organisms;
+- cells;
+- molecules;
+- digital entities;
+- simulated individuals;
+- abstract adaptive units.
+
+The key idea is that agents do not need to be complicated for the system to become interesting. Even simple agents can generate complex population-level patterns when they interact with resources, constraints, and one another over time.
+
+## Agents as simplified individuals
+
+Agents usually have states or traits that influence their behavior. In `artificialLifeR`, agents may have variables such as:
+
+- position;
+- energy;
+- speed;
+- efficiency;
+- reproduction threshold;
+- age;
+- survival status.
+
+These are simplified abstractions. They do not represent full biological organisms. Instead, they provide a small set of variables that allow learners to explore how individual-level differences can affect population-level outcomes.
+
+| Agent property | Conceptual role |
+|---|---|
+| `x`, `y` | Position in a simplified environment |
+| `energy` | Available internal resource |
+| `speed` | Movement ability |
+| `efficiency` | Ability to convert resources into energy |
+| `reproduction_threshold` | Energy level needed for reproduction |
+| `age` | Time spent alive |
+| `alive` | Survival status |
+
+These variables make it possible to connect individual traits with system-level behavior.
+
+## Environments as constraints
+
+Agents do not act in a vacuum. They exist in environments. The environment provides opportunities, limitations, and pressures.
+
+For example, an environment may contain:
+
+- resources;
+- spatial boundaries;
+- gradients;
+- hazards;
+- competitors;
+- changing conditions;
+- limits on growth.
+
+A resource-rich environment can support more activity. A resource-poor environment can limit survival and reproduction. This matters because traits are meaningful only in context.
+
+A fast agent may be useful if resources are spread out. A highly efficient agent may be useful if resources are scarce. A low reproduction threshold may be useful in some conditions but costly in others.
+
+This is one of the central lessons of artificial life:
+
+> Traits do not matter in isolation. They matter in relation to an environment.
+
+## Local rules
+
+Artificial-life models often use local rules. A local rule specifies how an agent responds to nearby resources, its own state, or simple environmental conditions.
+
+Examples include:
+
+- move through the environment;
+- search for nearby resources;
+- consume available resources;
+- lose energy through movement;
+- reproduce when energy is high enough;
+- mutate traits during reproduction;
+- die when energy falls too low.
+
+These rules are simple, but repeated over many agents and many time steps, they can generate population-level patterns.
+
+This is why local rules are important. The model does not directly impose the final population pattern. Instead, the pattern develops through repeated agent-environment interaction.
+
+## Local rules and system-level dynamics
+
+A single agent following a rule may not be very interesting. But many agents following rules in a shared environment can produce collective dynamics.
+
+For example:
+
+- resource competition can reduce average energy;
+- reproduction can increase population size;
+- mutation can introduce variation;
+- selection can shift trait distributions;
+- scarcity can produce population decline;
+- abundant resources can support population growth.
+
+The system-level behavior is not programmed directly. It arises from many local events.
+
+This is the central logic of artificial life:
+
+> Population-level dynamics emerge from agent-level rules and environmental constraints.
+
+## Relation to the package
+
+`artificialLifeR` represents this logic through a set of educational simulation functions.
+
+| Function | Conceptual role |
+|---|---|
+| `create_agents()` | Creates a starting population with simple traits |
+| `simulate_resource_competition()` | Shows how agents interact with resources |
+| `simulate_reproduction()` | Shows how energy and thresholds affect reproduction |
+| `simulate_mutation()` | Shows how trait variation can be introduced |
+| `simulate_selection()` | Shows how traits can affect survival or success |
+| `simulate_population_dynamics()` | Shows population change over time |
+| `measure_life_like_complexity()` | Summarizes diversity, energy, and population-level patterns |
+| `plot_alife_sim()` | Visualizes simulation outputs |
+
+Together, these functions help learners move from individual agents to population-level dynamics.
+
+## Example: creating agents
+
+Start by creating a simple population.
+
+```{r create-agents-example}
+agents <- create_agents(
+  n_agents = 20,
+  seed = 1
+)
+
+head(agents)
+```
+
+## Interpretation
+
+The output represents a simplified population. Each row corresponds to an agent. The columns describe the agent’s traits or state.
+
+This is not a realistic biological population. It is an educational starting point for exploring how differences among agents may influence later dynamics.
+
+## Example: agents in a resource world
+
+The function `simulate_resource_competition()` places agents in a simplified resource environment. Agents move, consume resources, and change energy over time.
+
+```{r agents-environment-example}
+competition <- simulate_resource_competition(
+  n_agents = 40,
+  steps = 40,
+  resource_regen = 0.20,
+  seed = 2
+)
+
+head(competition$summary)
+```
+
+## Plot mean energy
+
+```{r agents-environment-plot}
+plot_alife_sim(
+  competition$summary,
+  x = "step",
+  y = "mean_energy",
+  type = "line"
+)
+```
+
+## Interpretation
+
+The average energy changes because agents move, consume resources, and pay movement costs. The output is a population-level pattern generated by local rules.
+
+A careful interpretation is:
+
+> The plot shows how average energy changes in a simplified artificial-life simulation.
+
+An overstatement would be:
+
+> The plot fully explains biological metabolism or ecological competition.
+
+The first statement is appropriate. The second is too strong.
+
+## Population size over time
+
+If the summary output includes population size or number of living agents, it can also be useful to plot population change.
+
+```{r agents-population-plot}
+if ("n_alive" %in% names(competition$summary)) {
+  plot_alife_sim(
+    competition$summary,
+    x = "step",
+    y = "n_alive",
+    type = "line"
+  )
+}
+```
+
+## Interpretation of population change
+
+Population size is one of the simplest system-level outcomes in artificial-life models. It can reflect the balance between energy intake, movement cost, reproduction, and death.
+
+However, population size alone does not fully describe the system. A population may remain large but lose trait diversity, or it may become smaller while becoming more efficient.
+
+This is why artificial-life models often require multiple summaries.
+
+## Compare resource regeneration
+
+The environment can be changed by modifying `resource_regen`. This parameter represents how quickly resources return to the environment.
+
+```{r compare-resource-regen}
+low_resource <- simulate_resource_competition(
+  n_agents = 40,
+  steps = 40,
+  resource_regen = 0.05,
+  seed = 2
+)
+
+high_resource <- simulate_resource_competition(
+  n_agents = 40,
+  steps = 40,
+  resource_regen = 0.50,
+  seed = 2
+)
+
+head(low_resource$summary)
+head(high_resource$summary)
+```
+
+## Compare mean energy
+
+```{r compare-resource-energy}
+low_final_energy <- tail(low_resource$summary$mean_energy, 1)
+high_final_energy <- tail(high_resource$summary$mean_energy, 1)
+
+data.frame(
+  scenario = c("low resource regeneration", "high resource regeneration"),
+  final_mean_energy = c(low_final_energy, high_final_energy)
+)
+```
+
+## Interpretation of resource regeneration
+
+Changing resource regeneration changes the environmental constraint. If resources regenerate slowly, agents may have more difficulty maintaining energy. If resources regenerate quickly, agents may have more opportunity to survive, move, and reproduce.
+
+This shows that agent behavior cannot be interpreted separately from the environment.
+
+## Local does not mean trivial
+
+A local rule can be simple, but the system-level outcome may still be difficult to anticipate.
+
+For example, a simple rule such as “consume nearby resources” can interact with:
+
+- movement cost;
+- resource regeneration;
+- agent density;
+- reproduction threshold;
+- mutation;
+- survival rules.
+
+The resulting system may show population growth, collapse, stabilization, or trait change.
+
+This is one reason artificial life is valuable for education. It allows learners to see how local rules scale into population-level dynamics.
+
+## Agents and emergence
+
+Artificial life is closely related to emergence. The model starts with individual agents and local rules. The interesting pattern appears at the system level.
+
+| Level | Example in artificial-life models |
+|---|---|
+| Agent level | Energy, traits, movement, reproduction |
+| Interaction level | Competition, resource consumption, local response |
+| Environment level | Resource availability, constraints, regeneration |
+| Population level | Growth, decline, adaptation, diversity |
+
+An artificial-life explanation connects these levels. It does not only describe the individual agent, and it does not only describe the population. It explains how one level gives rise to another.
+
+## Relation to life and cognition
+
+Living systems involve agents and environments at many levels:
+
+- molecules interact inside cells;
+- cells interact in tissues;
+- organisms interact in ecosystems;
+- populations interact with changing environments.
+
+Cognitive systems also involve agent-environment interaction through perception, action, feedback, and adaptation.
+
+`artificialLifeR` does not model these systems in detail, but it helps explain why local rules and environmental constraints matter. It provides simple simulations that make agent-environment dynamics visible.
+
+## What this model captures
+
+The examples in this chapter capture several important ideas:
+
+- agents can have different states and traits;
+- environments create opportunities and constraints;
+- local rules can generate population-level patterns;
+- energy and resources shape survival and reproduction;
+- system-level dynamics arise over time;
+- interpretation requires connecting agents, rules, and environments.
+
+These ideas are central to artificial-life modeling.
+
+## What this model does not capture
+
+The models are intentionally simplified. They do not include:
+
+- real metabolism;
+- real genetic systems;
+- detailed development;
+- complex behavior;
+- perception;
+- learning;
+- real ecological networks;
+- full biological evolution.
+
+They are toy models for teaching. Their value lies in conceptual clarity, not biological realism.
+
+## Responsible interpretation
+
+It is better to say:
+
+> The simulation illustrates how simple agents can interact with resources in a simplified environment.
+
+than:
+
+> The simulation explains real biological life.
+
+It is better to say:
+
+> The model shows how local rules and environmental constraints can shape population-level patterns.
+
+than:
+
+> The model proves how life emerges.
+
+Careful interpretation keeps the package academically credible.
+
+## Educational use
+
+This chapter can support several classroom or self-study questions:
+
+- What is an agent?
+- What does the environment contribute to the model?
+- Why do traits depend on context?
+- How do local rules generate population-level outcomes?
+- What happens when resource availability changes?
+- What is the difference between an agent-level variable and a population-level pattern?
+- What would need to be added to make the model more realistic?
+
+These questions help learners understand artificial life as a bottom-up modeling approach.
+
+## Key takeaway
+
+Artificial-life models begin with agents, environments, and local rules. System-level behavior arises when agents repeatedly act, interact, consume resources, reproduce, mutate, or die over time.
+
+`artificialLifeR` uses this logic to make life-like dynamics visible and teachable. The package does not simulate real life in full detail, but it helps users explore how simple local rules can generate population-level patterns.
+
+## References

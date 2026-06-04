@@ -1,0 +1,26 @@
+pandoc: '3.2'
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  agents-and-traits-tutorial: agents-and-traits-tutorial.html
+  agents-environments-local-rules: agents-environments-local-rules.html
+  alife-consciousness-debates: alife-consciousness-debates.html
+  alife-emergence-origin-life: alife-emergence-origin-life.html
+  comparing-alife-models-tutorial: comparing-alife-models-tutorial.html
+  getting-started: getting-started.html
+  limitations-responsible-use: limitations-responsible-use.html
+  measuring-lifelike-complexity-tutorial: measuring-lifelike-complexity-tutorial.html
+  mutation-variation-novelty: mutation-variation-novelty.html
+  population-dynamics-evolvability: population-dynamics-evolvability.html
+  population-dynamics-tutorial: population-dynamics-tutorial.html
+  reproduction-inheritance: reproduction-inheritance.html
+  reproduction-mutation-tutorial: reproduction-mutation-tutorial.html
+  resource-competition-tutorial: resource-competition-tutorial.html
+  resources-metabolism-constraint: resources-metabolism-constraint.html
+  selection-adaptation: selection-adaptation.html
+  selection-tutorial: selection-tutorial.html
+  what-is-artificial-life: what-is-artificial-life.html
+last_built: 2026-06-04T02:58Z
+urls:
+  reference: https://noushinn.github.io/artificialLifeR/reference
+  article: https://noushinn.github.io/artificialLifeR/articles

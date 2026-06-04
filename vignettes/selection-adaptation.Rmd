@@ -1,0 +1,435 @@
+---
+title: "Selection and Adaptation"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Selection and Adaptation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+```{r load-package}
+library(artificialLifeR)
+```
+
+## Purpose
+
+This article explains selection and adaptation in artificial-life models. Selection occurs when some agents persist or reproduce more than others because of differences in traits, energy, or fitness-like scores [@darwin1859origin; @maynard1982evolution; @nowak2006evolutionary].
+
+The purpose of this chapter is to show how individual differences can lead to population-level change.
+
+The guiding question is:
+
+> How can individual differences lead to population-level change?
+
+## Why selection matters
+
+Selection is one of the central ideas in artificial life and evolutionary modelling. It connects individual-level differences to population-level change.
+
+A population may contain agents with different traits. Some agents may move faster, use resources more efficiently, have more energy, or reproduce more easily. If these differences affect survival or reproduction, the composition of the population can change over time.
+
+This is the basic logic of selection:
+
+> If traits differ, and some differences affect persistence or reproduction, then populations can change.
+
+## Selection as differential persistence
+
+Selection does not require intention, planning, or awareness. It requires three basic ingredients:
+
+1. **Variation**: agents differ from one another.
+2. **Consequences**: some differences affect survival or reproduction.
+3. **Persistence**: some traits become more common or less common over time.
+
+In a resource-limited artificial world, agents with higher energy or efficiency may be more likely to persist. Over time, the population may become enriched for certain traits.
+
+This process is selection-like. It does not mean the agents are trying to adapt. It means that the rules of the model cause some agents or traits to persist more than others.
+
+## Fitness as a model quantity
+
+In real evolutionary biology, fitness is a complex concept related to reproductive success in a particular environment. In artificial-life models, fitness is often simplified as a score.
+
+A fitness-like score may depend on:
+
+- energy;
+- efficiency;
+- speed;
+- survival;
+- reproduction;
+- resource access;
+- environmental fit.
+
+In `artificialLifeR`, selection is simplified for teaching. The goal is not to fully model biological fitness. The goal is to show how a population can change when some agents have higher persistence or success under a rule.
+
+## Relation to the package
+
+The function `simulate_selection()` applies simplified selection to a population of agents.
+
+| Argument | Conceptual meaning |
+|---|---|
+| `agents` | Starting population |
+| `survival_fraction` | Fraction of agents retained after selection |
+| `stochastic` | Whether chance influences survival |
+| `seed` | Reproducibility |
+
+Selection can be deterministic or stochastic.
+
+In deterministic selection, the highest-scoring agents are retained.  
+In stochastic selection, chance can influence which agents survive, even if some agents have an advantage.
+
+## Example: create a population
+
+Start with a population of artificial agents.
+
+```{r create-agents}
+agents <- create_agents(
+  n_agents = 80,
+  seed = 6
+)
+
+head(agents)
+```
+
+## Apply deterministic selection
+
+```{r selection-example}
+selected <- simulate_selection(
+  agents,
+  survival_fraction = 0.40,
+  stochastic = FALSE,
+  seed = 6
+)
+
+head(selected)
+```
+
+## Compare trait summaries before and after selection
+
+```{r selection-summary}
+rbind(
+  before = measure_life_like_complexity(
+    agents,
+    trait_col = "efficiency"
+  ),
+  after = measure_life_like_complexity(
+    selected,
+    trait_col = "efficiency"
+  )
+)
+```
+
+## Interpretation
+
+Selection changes the population composition. In this simplified model, selected agents are those with higher computed fitness when deterministic selection is used.
+
+A careful interpretation is:
+
+> The simulation illustrates how differential persistence can change trait summaries in an artificial population.
+
+An overstatement would be:
+
+> The simulation fully models natural selection.
+
+The first statement is appropriate. The second is too strong.
+
+## Selection changes composition, not individuals
+
+Selection does not usually mean that an individual agent changes its own traits during the selection step. Instead, selection changes which agents remain in the population.
+
+This distinction is important.
+
+| Level | What changes? |
+|---|---|
+| Individual agent | May survive or not survive |
+| Population | Composition changes |
+| Trait distribution | Some traits may become more or less common |
+
+Selection is therefore a population-level process built from individual-level differences.
+
+## Visualizing selection
+
+A simple plot can help compare a trait before and after selection.
+
+```{r selection-visualization}
+boxplot(
+  agents$efficiency,
+  selected$efficiency,
+  names = c("before selection", "after selection"),
+  ylab = "Efficiency",
+  main = "Efficiency before and after selection"
+)
+```
+
+## Interpretation of the plot
+
+The plot compares the distribution of efficiency before and after selection. If selection favours agents with higher efficiency, the selected population may show higher average efficiency or a shifted distribution.
+
+However, the plot should be interpreted carefully. It shows the result of a simplified rule, not proof of real biological adaptation.
+
+## Adaptation-like dynamics
+
+Adaptation is stronger than selection alone. Selection can remove or retain agents in a single step. Adaptation suggests that traits become better suited to the environment across generations.
+
+To show adaptation-like dynamics, a model needs:
+
+- variation;
+- inheritance;
+- differential persistence or reproduction;
+- environmental context;
+- change across generations.
+
+`artificialLifeR` provides simplified pieces of this process.
+
+For example:
+
+| Process | Role |
+|---|---|
+| Mutation | Introduces variation |
+| Reproduction | Creates continuity |
+| Inheritance | Preserves traits |
+| Selection | Changes trait frequencies |
+| Resources | Create environmental pressure |
+| Population dynamics | Shows change over time |
+
+Selection is important, but adaptation-like change requires these processes to work together.
+
+## Selection is context-dependent
+
+A trait is not universally good or bad. Its value depends on the environment and the model rules.
+
+For example:
+
+- high speed may help if resources are spread out;
+- high speed may be costly if movement uses energy;
+- high efficiency may help when resources are scarce;
+- early reproduction may help in unstable environments;
+- delayed reproduction may help if survival is reliable.
+
+This means selection must always be interpreted in context.
+
+A careful statement is:
+
+> This trait is favoured under this model setting.
+
+not:
+
+> This trait is always better.
+
+## Stochastic selection
+
+Selection is not always perfectly deterministic. Chance can matter.
+
+In biological systems, survival and reproduction may be influenced by random events, environmental fluctuations, accidents, or demographic noise. Artificial-life models can represent this idea by allowing stochastic selection.
+
+```{r stochastic-selection-theory}
+stochastic_selected <- simulate_selection(
+  agents,
+  survival_fraction = 0.40,
+  stochastic = TRUE,
+  seed = 10
+)
+
+data.frame(
+  deterministic_mean_fitness = mean(selected$fitness),
+  stochastic_mean_fitness = mean(stochastic_selected$fitness)
+)
+```
+
+## Interpretation of stochastic selection
+
+Stochastic selection reflects the idea that chance can matter. Higher-fitness agents may have an advantage, but outcomes are not perfectly deterministic.
+
+A careful interpretation is:
+
+> Stochastic selection allows chance to influence which agents persist.
+
+An overstatement would be:
+
+> Stochastic selection fully models all randomness in biological evolution.
+
+The first statement is appropriate. The second is not.
+
+## Compare deterministic and stochastic selection
+
+```{r compare-deterministic-stochastic}
+rbind(
+  deterministic = measure_life_like_complexity(
+    selected,
+    trait_col = "efficiency"
+  ),
+  stochastic = measure_life_like_complexity(
+    stochastic_selected,
+    trait_col = "efficiency"
+  )
+)
+```
+
+## Interpretation of comparison
+
+The deterministic and stochastic selected populations may differ. Deterministic selection keeps agents according to the strongest ranking rule. Stochastic selection allows some less highly ranked agents to persist and some stronger agents to be excluded.
+
+This helps illustrate that selection-like processes can involve both systematic pressure and chance.
+
+## Selection strength and survival fraction
+
+The `survival_fraction` argument controls how much of the population remains after selection.
+
+A lower survival fraction means stronger filtering.  
+A higher survival fraction means weaker filtering.
+
+```{r survival-fraction-comparison}
+strong_filter <- simulate_selection(
+  agents,
+  survival_fraction = 0.20,
+  stochastic = FALSE,
+  seed = 6
+)
+
+weak_filter <- simulate_selection(
+  agents,
+  survival_fraction = 0.80,
+  stochastic = FALSE,
+  seed = 6
+)
+
+data.frame(
+  scenario = c("strong filter", "weak filter"),
+  n_agents = c(nrow(strong_filter), nrow(weak_filter)),
+  mean_fitness = c(mean(strong_filter$fitness), mean(weak_filter$fitness)),
+  mean_efficiency = c(mean(strong_filter$efficiency), mean(weak_filter$efficiency))
+)
+```
+
+## Interpretation of survival fraction
+
+When the survival fraction is low, only a smaller portion of the population persists. This can produce a stronger shift in trait summaries if the selected trait is related to the fitness-like score.
+
+When the survival fraction is high, more agents remain, and the population may stay more similar to the original population.
+
+## Selection and diversity
+
+Selection can reduce diversity if it consistently favours a narrow set of traits. This can be useful if those traits are well suited to the environment, but it can also reduce the population’s ability to respond to future changes.
+
+This creates a trade-off:
+
+| Selection pattern | Possible consequence |
+|---|---|
+| Very weak selection | Little directional change |
+| Moderate selection | Some filtering while maintaining variation |
+| Very strong selection | Rapid filtering but possible loss of diversity |
+| Stochastic selection | Chance preserves some variation |
+
+This is one reason artificial-life models often combine selection with mutation. Mutation introduces novelty. Selection changes which variants persist.
+
+## Selection and adaptation are not identical
+
+Selection is a process. Adaptation is an interpretation of population change over time.
+
+A single selection step does not prove adaptation. It only shows that some agents were retained under a rule.
+
+Adaptation-like dynamics require evidence that traits become better suited to the environment across repeated cycles of variation, inheritance, and selection.
+
+A careful statement is:
+
+> Selection can contribute to adaptation-like dynamics.
+
+not:
+
+> Selection alone proves adaptation.
+
+## Relation to population dynamics
+
+Selection becomes more meaningful when embedded in population dynamics. In a population model, selection-like pressure can interact with reproduction, mutation, resource constraints, and carrying capacity.
+
+For example:
+
+- mutation introduces variation;
+- reproduction preserves and spreads traits;
+- selection changes which traits persist;
+- resource constraints define the environment;
+- population dynamics show system-level consequences.
+
+This is why selection should be understood as one component of a broader artificial-life system.
+
+## What the model captures
+
+The selection model captures several important ideas:
+
+- agents can differ in traits;
+- traits can influence persistence;
+- population composition can change after selection;
+- deterministic and stochastic selection produce different outcomes;
+- selection can change trait summaries;
+- selection-like pressure can support adaptation-like dynamics when combined with inheritance and variation.
+
+These ideas are central to artificial-life modelling.
+
+## What the model does not capture
+
+The model is intentionally simplified. It does not include:
+
+- real genetic inheritance;
+- full natural selection;
+- ecological complexity;
+- sexual selection;
+- genetic drift in detail;
+- recombination;
+- development;
+- speciation;
+- changing environments;
+- multi-level selection.
+
+It is a toy model for conceptual exploration.
+
+## Responsible interpretation
+
+The model does not prove real adaptation. It illustrates how differential persistence can change population composition in a toy system.
+
+It is better to say:
+
+> The simulation illustrates simplified selection-like filtering.
+
+than:
+
+> The simulation proves natural selection.
+
+It is better to say:
+
+> Adaptation-like patterns require variation, inheritance, selection, and environmental context.
+
+than:
+
+> A single selection step shows adaptation.
+
+Careful interpretation keeps the model useful and academically credible.
+
+## Educational use
+
+This chapter can support several classroom or self-study questions:
+
+- What is selection?
+- Why does selection require variation?
+- How does selection change population composition?
+- What is the difference between deterministic and stochastic selection?
+- Why is fitness context-dependent?
+- Why is selection not the same as adaptation?
+- How can strong selection reduce diversity?
+- Why do mutation and inheritance matter for adaptation-like dynamics?
+
+These questions help learners understand selection as one component of a larger artificial-life system.
+
+## Key takeaway
+
+Selection links individual differences to population-level change. In `artificialLifeR`, selection is represented as simplified filtering based on fitness-like scores, with optional stochasticity.
+
+Adaptation-like patterns require more than selection alone. They require variation, inheritance, differential persistence or reproduction, and environmental constraint. The package provides simplified tools for exploring these relationships while preserving the distinction between toy models and real biological evolution.
+
+## References
