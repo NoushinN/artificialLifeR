@@ -5,6 +5,9 @@
 [![R](https://img.shields.io/badge/R-4.1%2B-blue)](https://www.r-project.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Website](https://img.shields.io/badge/Website-pkgdown-blue)](https://noushinn.github.io/artificialLifeR/)
+<!-- badges: start -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20764171.svg)](https://doi.org/10.5281/zenodo.20764171)
+<!-- badges: end -->
 [![GitHub stars](https://img.shields.io/github/stars/NoushinN/artificialLifeR?style=social)](https://github.com/NoushinN/artificialLifeR)
 
 **artificialLifeR** is an educational R package for simulating, visualizing, and explaining simplified artificial-life models.
@@ -223,3 +226,7 @@ This package complements educational projects on origin of life, emergence, comp
 ## License
 
 MIT License
+
+## Citation
+If referencing this project, please cite: Nabavi, N. *artificialLifeR: An Educational R Package for Simulating Simplified Artificial-Life Dynamics*
+[DOI](https://zenodo.org/records/20764171)

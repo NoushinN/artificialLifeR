@@ -7,6 +7,7 @@ sticker](reference/figures/artificialLifeR_hex_sticker.png)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://noushinn.github.io/artificialLifeR/LICENSE)
 [![Website](https://img.shields.io/badge/Website-pkgdown-blue)](https://noushinn.github.io/artificialLifeR/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20764171.svg)](https://doi.org/10.5281/zenodo.20764171)
 [![GitHub
 stars](https://img.shields.io/github/stars/NoushinN/artificialLifeR?style=social)](https://github.com/NoushinN/artificialLifeR)
 
@@ -247,6 +248,12 @@ emergence, complexity, consciousness, and artificial intelligence.
 ## License
 
 MIT License
+
+## Citation
+
+If referencing this project, please cite: Nabavi, N. *artificialLifeR:
+An Educational R Package for Simulating Simplified Artificial-Life
+Dynamics* [DOI](https://zenodo.org/records/20764171)
 
 # Package index
 

@@ -2,6 +2,16 @@ url: https://noushinn.github.io/artificialLifeR/
 
 template:
   bootstrap: 5
+  includes:
+    in_header: |
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-5LJV5S16HQ"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5LJV5S16HQ');
+      </script>
 
 extra_css: pkgdown/extra.css
 
@@ -106,3 +116,5 @@ reference:
   contents:
   - measure_life_like_complexity
   - plot_alife_sim
+
+
