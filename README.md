@@ -229,4 +229,4 @@ MIT License
 
 ## Citation
 If referencing this project, please cite: Nabavi, N. *artificialLifeR: An Educational R Package for Simulating Simplified Artificial-Life Dynamics*
-[DOI](https://zenodo.org/records/20764171)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20764171.svg)](https://doi.org/10.5281/zenodo.20764171)
